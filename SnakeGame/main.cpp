@@ -116,6 +116,7 @@ int main()
 	auto lastMoveTime = std::chrono::steady_clock::now();
 	auto currentDirection = Direction::Right;
 
+
 	while (window.isOpen())
 	{
 		// begin frame time
