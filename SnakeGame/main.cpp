@@ -8,6 +8,7 @@ int main()
 	sf::Vector2f headPos(0, 0);
 	sf::RectangleShape head(sf::Vector2f(cellSize, cellSize));
 
+
 	while (window.isOpen())
 	{
 		sf::Event event;
