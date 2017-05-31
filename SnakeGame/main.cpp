@@ -1,3 +1,6 @@
+// TODO:
+// - Optimize deque implementation to scale by the size of snake, not number of steps
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <deque>
@@ -5,6 +8,8 @@
 #include <chrono>
 #include <thread>
 #include <algorithm>
+#include <iostream> 
+
 
 #include "main.h"
 
@@ -115,13 +120,13 @@ int main()
 	
 	auto lastMoveTime = std::chrono::steady_clock::now();
 	auto currentDirection = Direction::Right;
-
+	auto snakeDirection = Direction::Right;
 
 	while (window.isOpen())
 	{
 		// begin frame time
 		auto startFrameTime = std::chrono::steady_clock::now();
-
+		
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -129,6 +134,7 @@ int main()
 			{
 				case sf::Event::Closed:
 				{
+					throw std::runtime_error("Fucked");
 					window.close();
 				} break;
 
@@ -160,7 +166,8 @@ int main()
 							} break;
 						}
 
-						if (!opposite(tempDirection, currentDirection))
+						if (!opposite(tempDirection, currentDirection) &&
+							!opposite(tempDirection, snakeDirection))
 						{
 							currentDirection = tempDirection;
 						}
@@ -179,9 +186,11 @@ int main()
 		if (startFrameTime - lastMoveTime >= std::chrono::milliseconds{ 250 })
 		{
 			headPos += getVelocity(currentDirection);
+			snakeDirection = currentDirection;
 			// Check wall
 			if (!insideWindow(headPos))
 			{
+				std::cout << "Run into wall, exiting;\n";
 				window.close();
 				break;
 			}
@@ -189,6 +198,7 @@ int main()
 			// Check body
 			if (std::any_of(snakeVector.begin(), snakeVector.end(), [&headPos](auto& node) {return node.getPosition() == headPos; }))
 			{
+				std::cout << "Snake run into itself, exiting.\n";
 				window.close();
 				break;
 			}
@@ -219,6 +229,11 @@ int main()
 		// End frame time
 		auto endFrameTime = std::chrono::steady_clock::now();
 		auto timeElapsed = endFrameTime - startFrameTime;
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(timeElapsed).count() > mspf) {
+			std::cout << "Current frame render time: " << std::chrono::duration_cast<std::chrono::milliseconds>(timeElapsed).count() << ", target mspf: " << mspf << "\n";
+			std::cout << "Render time exceeds mspf, dropping frame(s)\n";
+			timeElapsed = timeElapsed % mspf;
+		}
 		std::this_thread::sleep_for(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::milliseconds{ mspf } - timeElapsed));
 		window.display();
 	}
