@@ -1,20 +1,27 @@
-# Snake
+# Snake Game
 
-A program that mimic the Snake Game
+An application that mimics the Snake Game on Nokia phone.
 
-User are in control of a Snake that is trying to eat food to
-grow as big as possible.
+The game is operated inside a 800x600 window.
 
-The game exist inside an 800x600 windows.
+# How to play
 
-The objective of the game is to eat as much food as possible
+The objective of the game is to grow the snake. The longer the snake is, the higher point you get.
 
-Foods are randomly generated in empty cells within the window
+In order for that to happen, the snake needs to consume as much food as possible.
 
-The possible direction for the snake to traverse are UP, DOWN, LEFT, RIGHT
+Everytime food is comsume, your snake will increase by one cell horizontally or vertically.
 
-When the snake consume a food cell, the snake size will increase by one cell
-in the horizontal or vertical direction.
+Foods are randomly distributed in empty cells within the window.
 
-The game will end if the head of the snake hit the border or hit
-its on snake cell.
+There are only four possible directions for the snake to traverse: UP, DOWN, LEFT, RIGHT.
+
+If the snake hits the boundaries or its body, you will lose.
+
+# Frameworks:
+
+C++ 17
+
+OpenCV 3.3
+
+
